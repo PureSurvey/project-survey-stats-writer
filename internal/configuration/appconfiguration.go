@@ -6,8 +6,10 @@ type AppConfiguration struct {
 }
 
 type EventsConfiguration struct {
-	BrokerUrl string `json:"brokerUrl"`
-	Topic     string `json:"topic"`
+	BrokerUrl             string `json:"brokerUrl"`
+	Group                 string `json:"group"`
+	TrackingEventsTopic   string `json:"trackingEventsTopic"`
+	CompletionEventsTopic string `json:"completionEventsTopic"`
 }
 
 type DbConfiguration struct {

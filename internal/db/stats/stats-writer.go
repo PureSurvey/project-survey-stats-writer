@@ -2,7 +2,7 @@ package stats
 
 import (
 	"log"
-	"project-survey-stats-writer/internal/db/contracts"
+	"project-survey-stats-writer/internal/db"
 	"project-survey-stats-writer/internal/events"
 	"time"
 )
@@ -14,11 +14,11 @@ var (
 )
 
 type StatsWriter struct {
-	dbClient   contracts.IDbClient
+	dbClient   db.Client
 	messageBuf []string
 }
 
-func GetStatsWriter(dbClient contracts.IDbClient) StatsWriter {
+func GetStatsWriter(dbClient db.Client) StatsWriter {
 	return StatsWriter{dbClient: dbClient, messageBuf: make([]string, 0)}
 }
 
