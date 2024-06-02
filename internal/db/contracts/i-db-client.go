@@ -1,6 +1,6 @@
 package contracts
 
 type IDbClient interface {
-	InsertRows(query string) error
+	BulkInsertFromCsv(query string) error
 	CloseConnection()
 }

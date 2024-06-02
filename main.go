@@ -5,21 +5,22 @@ import (
 	"log"
 	"os"
 	"os/signal"
-	"project-survey-stats-writer/kafka"
-	"project-survey-stats-writer/stats"
-	"project-survey-stats-writer/vertica"
 	"project-survey-stats-writer/internal/configuration"
+	"project-survey-stats-writer/internal/db/stats"
+	"project-survey-stats-writer/internal/db/vertica"
+	"project-survey-stats-writer/internal/events/kafka"
 	"syscall"
 )
 
 func main() {
-	db := vertica.InitClient()
 	parser := configuration.NewParser()
 	config, err := parser.Parse("appsettings.json")
 	if err != nil {
 		log.Fatalf(err.Error())
 		return
 	}
+
+	db := vertica.Init()
 	defer db.CloseConnection()
 
 	consumer, err := kafka.InitConsumer("localhost:9092")

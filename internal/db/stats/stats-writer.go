@@ -2,8 +2,8 @@ package stats
 
 import (
 	"log"
-	"project-survey-stats-writer/contracts"
-	"project-survey-stats-writer/events"
+	"project-survey-stats-writer/internal/db/contracts"
+	"project-survey-stats-writer/internal/events"
 	"time"
 )
 
@@ -45,7 +45,7 @@ func (sw *StatsWriter) Finalise() {
 func (sw *StatsWriter) processBatch(batch []string) {
 	query := events.GetEventsInsertStatement(batch)
 
-	err := sw.dbClient.InsertRows(query)
+	err := sw.dbClient.BulkInsertFromCsv(query)
 	if err != nil {
 		log.Printf("Error executing statement: %v\n", err)
 		return

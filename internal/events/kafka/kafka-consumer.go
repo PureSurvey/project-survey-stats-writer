@@ -3,7 +3,7 @@ package kafka
 import (
 	"fmt"
 	"github.com/confluentinc/confluent-kafka-go/kafka"
-	"project-survey-stats-writer/contracts"
+	"project-survey-stats-writer/internal/events/contracts"
 )
 
 type KafkaConsumer struct {
