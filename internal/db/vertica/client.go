@@ -7,6 +7,7 @@ import (
 	"log"
 	"os"
 	"project-survey-stats-writer/internal/configuration"
+	"time"
 )
 
 type Client struct {
@@ -18,20 +19,30 @@ func NewClient(config *configuration.DbConfiguration) *Client {
 	return &Client{config: config}
 }
 
-func (cl *Client) Init() {
-	db, err := sql.Open("vertica", cl.config.ConnectionString)
+func (cl *Client) Init() error {
+	var err error
+	cl.db, err = sql.Open("vertica", cl.config.ConnectionString)
 	if err != nil {
 		log.Fatal(err)
+		return err
 	}
 
-	db.SetMaxOpenConns(10)
-	db.SetMaxIdleConns(5)
+	cl.db.SetMaxOpenConns(10)
+	cl.db.SetMaxIdleConns(5)
 
-	if err = db.Ping(); err != nil {
+	for i := 0; i < cl.config.ConnectionRetryCount; i++ {
+		err = cl.db.Ping()
+		if err != nil {
+			log.Println("Error when connecting to DB:", err.Error(), "Try", i+1, "of", cl.config.ConnectionRetryCount)
+			time.Sleep(time.Duration(cl.config.ConnectionRetryTimeout) * time.Second)
+		}
+	}
+	if err != nil {
 		log.Fatal(err)
+		return err
 	}
 
-	cl.db = db
+	return nil
 }
 
 func (cl *Client) BulkInsertFromCsv(fileName string, tableName string) error {

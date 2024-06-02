@@ -11,5 +11,7 @@ type EventsConfiguration struct {
 }
 
 type DbConfiguration struct {
-	ConnectionString string `json:"connectionString"`
+	ConnectionRetryCount   int    `json:"connectionRetryCount"`
+	ConnectionRetryTimeout int    `json:"connectionRetryTimeout"`
+	ConnectionString       string `json:"connectionString"`
 }

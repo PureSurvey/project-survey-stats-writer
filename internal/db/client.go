@@ -1,6 +1,6 @@
-package contracts
+package db
 
-type IDbClient interface {
+type Client interface {
 	BulkInsertFromCsv(query string) error
 	CloseConnection()
 }
