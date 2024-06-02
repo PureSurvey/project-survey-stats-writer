@@ -2,13 +2,13 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"os"
 	"os/signal"
 	"project-survey-stats-writer/internal/configuration"
 	"project-survey-stats-writer/internal/db/vertica"
 	"project-survey-stats-writer/internal/events/kafka"
+	"project-survey-stats-writer/internal/messages"
 	"sync"
 	"syscall"
 )
@@ -37,6 +37,9 @@ func main() {
 		return
 	}
 
+	proceeder := messages.NewProceeder(db, config.EventsConfiguration, consumer.Messages)
+	go proceeder.Proceed()
+
 	ctx, cancelCtx := context.WithCancel(context.Background())
 	wg := &sync.WaitGroup{}
 	wg.Add(1)
@@ -60,8 +63,6 @@ func main() {
 	keepRunning := true
 	for keepRunning {
 		select {
-		case msg := <-consumer.Messages:
-			fmt.Printf("%v, %v", string(msg.Value), msg.Topic)
 		case <-ctx.Done():
 			log.Println("terminating: context cancelled")
 			keepRunning = false

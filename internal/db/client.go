@@ -1,6 +1,8 @@
 package db
 
+import "io"
+
 type Client interface {
-	BulkInsertFromCsv(query string) error
+	BulkInsert(inputStream io.Reader, tableName string) error
 	CloseConnection()
 }

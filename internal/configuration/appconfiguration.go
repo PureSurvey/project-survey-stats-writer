@@ -16,4 +16,5 @@ type DbConfiguration struct {
 	ConnectionRetryCount   int    `json:"connectionRetryCount"`
 	ConnectionRetryTimeout int    `json:"connectionRetryTimeout"`
 	ConnectionString       string `json:"connectionString"`
+	WritingBatchSize       int    `json:"writingBatchSize"`
 }

@@ -5,6 +5,7 @@ go 1.21
 require (
 	github.com/IBM/sarama v1.43.2
 	github.com/vertica/vertica-sql-go v1.3.3
+	google.golang.org/protobuf v1.34.1
 )
 
 require (

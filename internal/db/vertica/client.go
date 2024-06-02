@@ -3,9 +3,10 @@ package vertica
 import (
 	"context"
 	"database/sql"
+	"fmt"
 	vertigo "github.com/vertica/vertica-sql-go"
+	"io"
 	"log"
-	"os"
 	"project-survey-stats-writer/internal/configuration"
 	"time"
 )
@@ -45,16 +46,14 @@ func (cl *Client) Init() error {
 	return nil
 }
 
-func (cl *Client) BulkInsertFromCsv(fileName string, tableName string) error {
-	fp, err := os.OpenFile(fileName, os.O_RDONLY, 0600)
-
+func (cl *Client) BulkInsert(inputStream io.Reader, tableName string) error {
 	vCtx := vertigo.NewVerticaContext(context.Background())
-	err = vCtx.SetCopyInputStream(fp)
+	err := vCtx.SetCopyInputStream(inputStream)
 	if err != nil {
 		return err
 	}
 
-	_, err = cl.db.ExecContext(vCtx, "COPY @tableName FROM STDIN DELIMITER ','", sql.Named("tableName", tableName))
+	_, err = cl.db.ExecContext(vCtx, fmt.Sprintf(`COPY %v FROM STDIN DELIMITER ',' ENCLOSED '''';`, tableName))
 	return err
 }
 
