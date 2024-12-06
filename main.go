@@ -37,7 +37,7 @@ func main() {
 		return
 	}
 
-	proceeder := messages.NewProceeder(db, config.EventsConfiguration, consumer.Messages)
+	proceeder := messages.NewProceeder(db, config, consumer.Messages)
 	go proceeder.Proceed()
 
 	ctx, cancelCtx := context.WithCancel(context.Background())
